@@ -1,5 +1,5 @@
 const { checkSchema } = require('express-validator')          
-const User = require("../model");            
+const { User } = require("../model");            
 
 const createAccountValidator = checkSchema({
   username: {

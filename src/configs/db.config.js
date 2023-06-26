@@ -1,7 +1,8 @@
 require('dotenv').config();
+const { env } = require("./server.config");
 const mongoose = require('mongoose');
 
-const uri = process.env.ATLAS_URI
+const uri = env === 'prod'? process.env.ATLAS_URI : 'mongodb://127.0.0.1:27017/hitorigoto';
 
 const dbConnect = mongoose.connect(
   uri, {

@@ -1,8 +1,9 @@
 const util = require("util");
 const multer = require("multer");
+const { env } = require("./../configs/server.config");
 const { GridFsStorage } = require("multer-gridfs-storage");
 
-const uri = process.env.ATLAS_URI
+const uri = env === 'prod'? process.env.ATLAS_URI : 'mongodb://127.0.0.1:27017/hitorigoto';
 
 const storage = new GridFsStorage({
   url: uri,
