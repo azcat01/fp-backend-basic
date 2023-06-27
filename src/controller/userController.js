@@ -24,12 +24,12 @@ const getNavbarInfo = async (req, res, next) => {
           })
         }
 
-        let user = await User.findById(data.id).select("username profile_img");
+        let user = await User.findById(data.id).select("username img_id");
         user = user?.toObject();
 
-        let img = await Image.findOne({ files_id : user.profile_img?.id }).select("data");
+        let img = await Image.findOne({ files_id : user.img_id.slice(-1)[0] }).select("data");
         img = img?.toObject();
-        const imgInfo = await ImageData.findById(user.profile_img?.id);
+        const imgInfo = await ImageData.findById(user.img_id.slice(-1)[0]);
 
         return res.status(200).json({
           status: "OK",
@@ -146,7 +146,6 @@ const loginAccount = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "Internal Server Error",
       message: error.toString()
@@ -181,7 +180,6 @@ const logoutAccount = async(req, res, next) => {
       })
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "Internal Server Error",
       message: error.toString()
@@ -221,9 +219,10 @@ const getAccount = async(req, res, next) => {
           })
         }
 
-        let img = await Image.findOne({ files_id : account.profile_img?.id }).select("data");
+        let img = await Image.findOne({ files_id : account.img_id.slice(-1)[0] }).select("data");
         img = img?.toObject();
-        const imgInfo = await ImageData.findById(account.profile_img?.id);
+        const imgInfo = await ImageData.findById(account.img_id.slice(-1)[0]);
+        
 
         return res.status(200).json({
           status: "OK",
@@ -243,7 +242,6 @@ const getAccount = async(req, res, next) => {
     }
 
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "Internal Server Error",
       message: error.toString()
@@ -298,7 +296,7 @@ const editAccount = async(req, res, next) => {
             },
             email: email || account.email,
             $addToSet: {
-              img_id: req.file?.id || account.profile_img?.id || "" 
+              img_id: req.file?.id || account.img_id || "" 
             },
             updated_at: new Date(),
           }, {
@@ -360,8 +358,8 @@ const deleteAccount = async (req, res, next) => {
           })
         }
         
-        const img = await Image.deleteMany({ files_id : { $in: account?.img_id } });
-        await ImageData.deleteMany({ _id: { $in: account?.img_id } });
+        const img = await Image.deleteMany({ files_id : { $in: account.img_id } });
+        await ImageData.deleteMany({ _id: { $in: account.img_id } });
         
         const result = await User.findByIdAndDelete(account._id);
 
