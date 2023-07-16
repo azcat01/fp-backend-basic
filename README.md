@@ -143,7 +143,7 @@ curl --location --request DELETE 'http://localhost:5050/admin/account' \
 ## Optimizations
 
 - Course Schema
-- User Scores
+- User Grades
 ## Authors
 
 - [azcat01](https://www.github.com/azcat01)
